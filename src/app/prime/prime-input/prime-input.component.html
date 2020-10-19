@@ -1,0 +1,10 @@
+<div class="container">
+  <form [formGroup]="inputForm" (ngSubmit)="onSubmit()">
+    <label>
+      Number count:
+      <input type="number" formControlName="count" value="1">
+    </label>
+
+    <button type="submit">RUN</button>
+  </form>
+</div>

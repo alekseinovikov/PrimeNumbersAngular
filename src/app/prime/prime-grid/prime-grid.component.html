@@ -1,0 +1,5 @@
+<div class="container">
+  <div *ngFor="let value of gridValues; let i = index;">
+    <div [class.box-green]="value" [class.box-white]="!value">{{i + 1}}</div>
+  </div>
+</div>
