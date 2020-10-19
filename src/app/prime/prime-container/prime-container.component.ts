@@ -24,8 +24,7 @@ export class PrimeContainerComponent implements OnInit {
   }
 
   private runCalculation(): void {
-    const values = this.calculator.calculate(this.count);
-    this.gridValues = values;
+    this.gridValues = this.calculator.calculate(this.count);
   }
 
 }
