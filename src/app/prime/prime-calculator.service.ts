@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,31 +9,38 @@ export class PrimeCalculatorService {
   constructor() {
   }
 
-  calculate(count: number): Array<boolean> {
-    if (count <= 0) {
-      return [];
-    }
-
-    const arr = this.createArrayForMaxNumber(count);
-    this.setNumberNotPrime(1, arr);
-    if (count <= 2) {
-      return arr;
-    }
-
-    for (let i = 2; i < count / 2; i++) {
-      let iter = 2;
-      let curr = i * iter;
-      while (curr <= count) {
-        if (curr % i === 0 && this.isNumberPrime(curr, arr)) {
-          this.setNumberNotPrime(curr, arr);
-        }
-
-        curr = i * iter;
-        iter++;
+  calculateNotPrimeNumbersAsync(count: number): Observable<number> {
+    return new Observable<number>((subscriber) => {
+      if (count <= 0) {
+        subscriber.complete();
+        return;
       }
-    }
 
-    return arr;
+      const arr = this.createArrayForMaxNumber(count);
+      this.setNumberNotPrime(1, arr);
+      subscriber.next(1);
+      if (count <= 2) {
+        subscriber.complete();
+        return;
+      }
+
+      for (let i = 2; i < count / 2; i++) {
+        let iter = 2;
+        let curr = i * iter;
+        while (curr <= count) {
+          if (curr % i === 0 && this.isNumberPrime(curr, arr)) {
+            this.setNumberNotPrime(curr, arr);
+            subscriber.next(curr);
+          }
+
+          curr = i * iter;
+          iter++;
+        }
+      }
+
+      subscriber.complete();
+      return;
+    });
   }
 
   private setNumberNotPrime(num: number, arr: Array<boolean>): void {
@@ -55,8 +63,8 @@ export class PrimeCalculatorService {
   }
 
   private createArrayForMaxNumber(num: number): Array<boolean> {
-    const arr = new Array<boolean>(num);
-    for (let i = 0; i < arr.length - 1; i++) {
+    const arr: boolean[] = [];
+    for (let i = 0; i <= num - 1; i++) {
       arr[i] = true;
     }
 
